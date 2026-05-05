@@ -1,0 +1,118 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'core/constants/app_constants.dart';
+import 'core/themes/app_theme.dart';
+import 'features/about/about_screen.dart';
+import 'features/editor/presentation/pages/editor_screen.dart';
+import 'features/home/presentation/pages/home_screen.dart';
+import 'features/preview/presentation/pages/file_preview_screen.dart';
+import 'features/search/presentation/pages/search_screen.dart';
+import 'features/settings/presentation/pages/settings_screen.dart';
+import 'features/settings/presentation/providers/settings_provider.dart';
+import 'features/splash/splash_screen.dart';
+import 'models/file_item.dart';
+import 'services/config_repository.dart';
+import 'services/editor_cache_repository.dart';
+import 'services/notification_service.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    systemNavigationBarColor: Colors.transparent,
+  ));
+
+  // Pre-warm config so theme is ready before first frame.
+  try {
+    await ConfigRepository.instance.load();
+  } catch (_) {/* fallback to defaults */}
+
+  // Init notifications & prune stale caches in the background.
+  // ignore: discarded_futures
+  AppNotificationService.instance.init();
+  // ignore: discarded_futures
+  EditorCacheRepository.instance.pruneStale();
+
+  runApp(const ProviderScope(child: FilesClawApp()));
+}
+
+class FilesClawApp extends ConsumerWidget {
+  const FilesClawApp({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
+    return MaterialApp(
+      title: AppConstants.appName,
+      debugShowCheckedModeBanner: false,
+      themeMode: themeMode,
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      onGenerateRoute: _onGenerateRoute,
+      initialRoute: '/',
+    );
+  }
+
+  Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case '/':
+        return _fadeRoute(const SplashScreen(), settings);
+      case '/home':
+        return _fadeRoute(const HomeScreen(), settings);
+      case '/settings':
+        return _slideRoute(const SettingsScreen(), settings);
+      case '/about':
+        return _slideRoute(const AboutScreen(), settings);
+      case '/search':
+        return _slideRoute(const SearchScreen(), settings);
+      case '/preview':
+        final file = settings.arguments;
+        if (file is! FileItem) {
+          return _fadeRoute(const HomeScreen(), settings);
+        }
+        return _slideRoute(FilePreviewScreen(file: file), settings);
+      case '/editor':
+        final file = settings.arguments;
+        if (file is! FileItem) {
+          return _fadeRoute(const HomeScreen(), settings);
+        }
+        return _slideRoute(EditorScreen(file: file), settings);
+    }
+    return _fadeRoute(const HomeScreen(), settings);
+  }
+
+  PageRouteBuilder _fadeRoute(Widget page, RouteSettings settings) {
+    return PageRouteBuilder(
+      settings: settings,
+      pageBuilder: (_, __, ___) => page,
+      transitionDuration: const Duration(milliseconds: 200),
+      reverseTransitionDuration: const Duration(milliseconds: 150),
+      transitionsBuilder: (_, animation, __, child) =>
+          FadeTransition(opacity: animation, child: child),
+    );
+  }
+
+  PageRouteBuilder _slideRoute(Widget page, RouteSettings settings) {
+    return PageRouteBuilder(
+      settings: settings,
+      pageBuilder: (_, __, ___) => page,
+      transitionDuration: const Duration(milliseconds: 230),
+      reverseTransitionDuration: const Duration(milliseconds: 180),
+      transitionsBuilder: (_, animation, __, child) {
+        final offset = Tween<Offset>(
+          begin: const Offset(0.05, 0),
+          end: Offset.zero,
+        ).animate(CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+        ));
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(position: offset, child: child),
+        );
+      },
+    );
+  }
+}
