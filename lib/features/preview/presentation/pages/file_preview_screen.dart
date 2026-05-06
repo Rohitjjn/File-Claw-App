@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:open_filex/open_filex.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/themes/claude_colors.dart';
@@ -149,25 +150,43 @@ class _FilePreviewScreenState extends ConsumerState<FilePreviewScreen> {
                       case 'properties':
                         await _showProperties();
                         break;
+                      case 'browser_preview':
+                        await OpenFilex.open(widget.file.path);
+                        break;
                     }
                   },
-                  itemBuilder: (_) => const [
-                    PopupMenuItem(
-                        value: 'share',
-                        child: ListTile(
-                            leading: Icon(Icons.share_outlined),
-                            title: Text('Share'))),
-                    PopupMenuItem(
-                        value: 'properties',
-                        child: ListTile(
-                            leading: Icon(Icons.info_outline),
-                            title: Text('Properties'))),
-                    PopupMenuItem(
-                        value: 'remove',
-                        child: ListTile(
-                            leading: Icon(Icons.history_toggle_off_outlined),
-                            title: Text('Remove from history'))),
-                  ],
+                  itemBuilder: (_) {
+                    final items = <PopupMenuEntry<String>>[
+                      const PopupMenuItem(
+                          value: 'share',
+                          child: ListTile(
+                              leading: Icon(Icons.share_outlined),
+                              title: Text('Share'))),
+                      const PopupMenuItem(
+                          value: 'properties',
+                          child: ListTile(
+                              leading: Icon(Icons.info_outline),
+                              title: Text('Properties'))),
+                      const PopupMenuItem(
+                          value: 'remove',
+                          child: ListTile(
+                              leading: Icon(Icons.history_toggle_off_outlined),
+                              title: Text('Remove from history'))),
+                    ];
+                    if (widget.file.extension.toLowerCase() == 'html') {
+                      items.insert(
+                        0,
+                        const PopupMenuItem(
+                          value: 'browser_preview',
+                          child: ListTile(
+                            leading: Icon(Icons.web),
+                            title: Text('Preview in Browser'),
+                          ),
+                        ),
+                      );
+                    }
+                    return items;
+                  },
                 ),
               ],
             ),
