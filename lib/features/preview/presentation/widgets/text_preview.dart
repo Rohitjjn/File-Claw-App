@@ -81,6 +81,10 @@ class TextPreview extends StatelessWidget {
       },
     );
 
-    return body;
+    return InteractiveViewer(
+      minScale: 0.5,
+      maxScale: 5.0,
+      child: body,
+    );
   }
 }

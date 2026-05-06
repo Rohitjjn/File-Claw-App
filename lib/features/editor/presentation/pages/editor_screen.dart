@@ -162,6 +162,89 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     _insertWrap(' ' * cfg.tabSize, '');
   }
 
+  void _copy() {
+    final sel = _textController.selection;
+    final text = _textController.text;
+    if (sel.isValid && !sel.isCollapsed) {
+      Clipboard.setData(ClipboardData(text: sel.textInside(text)));
+    } else {
+      Clipboard.setData(ClipboardData(text: text));
+    }
+  }
+
+  void _cut() {
+    final sel = _textController.selection;
+    final text = _textController.text;
+    if (sel.isValid && !sel.isCollapsed) {
+      Clipboard.setData(ClipboardData(text: sel.textInside(text)));
+      final newText = text.replaceRange(sel.start, sel.end, '');
+      _textController.value = TextEditingValue(
+        text: newText,
+        selection: TextSelection.collapsed(offset: sel.start),
+      );
+      ref.read(_provider.notifier).onTextChanged(newText);
+    }
+  }
+
+  Future<void> _paste() async {
+    final data = await Clipboard.getData(Clipboard.kTextPlain);
+    if (data != null && data.text != null) {
+      final sel = _textController.selection;
+      final text = _textController.text;
+      if (sel.isValid) {
+        final newText = text.replaceRange(sel.start, sel.end, data.text!);
+        _textController.value = TextEditingValue(
+          text: newText,
+          selection: TextSelection.collapsed(offset: sel.start + data.text!.length),
+        );
+        ref.read(_provider.notifier).onTextChanged(newText);
+      }
+    }
+  }
+
+  void _selectAll() {
+    final text = _textController.text;
+    _textController.selection = TextSelection(baseOffset: 0, extentOffset: text.length);
+  }
+
+  void _autoFormat() {
+    final cfg = ref.read(settingsProvider);
+    final text = _textController.text;
+    if (text.isEmpty) return;
+
+    final lines = text.split('\n');
+    final tab = ' ' * cfg.tabSize;
+    int indentLevel = 0;
+    final formattedLines = <String>[];
+
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (line.isEmpty) {
+        formattedLines.add('');
+        continue;
+      }
+
+      // Decrease indent if line starts with closing brace
+      if (line.startsWith('}') || line.startsWith(']')) {
+        indentLevel = (indentLevel > 0) ? indentLevel - 1 : 0;
+      }
+
+      formattedLines.add((tab * indentLevel) + line);
+
+      // Increase indent if line ends with opening brace
+      if (line.endsWith('{') || line.endsWith('[')) {
+        indentLevel++;
+      }
+    }
+
+    final newText = formattedLines.join('\n');
+    _textController.value = TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
+    ref.read(_provider.notifier).onTextChanged(newText);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -313,6 +396,12 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         children: [
+          _ToolbarBtn(icon: Icons.content_copy, tooltip: 'Copy', onTap: _copy),
+          _ToolbarBtn(icon: Icons.content_cut, tooltip: 'Cut', onTap: _cut),
+          _ToolbarBtn(icon: Icons.content_paste, tooltip: 'Paste', onTap: _paste),
+          _ToolbarBtn(icon: Icons.select_all, tooltip: 'Select All', onTap: _selectAll),
+          _ToolbarBtn(icon: Icons.format_align_left, tooltip: 'Auto Format', onTap: _autoFormat),
+          const VerticalDivider(width: 16),
           if (isMd) ...[
             _ToolbarBtn(icon: Icons.format_bold, tooltip: 'Bold', onTap: () => _insertWrap('**', '**')),
             _ToolbarBtn(icon: Icons.format_italic, tooltip: 'Italic', onTap: () => _insertWrap('_', '_')),

@@ -12,6 +12,7 @@ import '../../../../core/widgets/empty_state.dart';
 import '../../../../core/widgets/file_icon.dart';
 import '../../../../models/file_item.dart';
 import '../../../../services/file_picker_service.dart';
+import '../../../../services/permission_service.dart';
 import '../../../history/presentation/providers/history_provider.dart';
 import '../../../sidebar/presentation/widgets/sidebar_drawer.dart';
 
@@ -31,6 +32,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     _scroll.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _requestPermissions();
+    });
+  }
+
+  Future<void> _requestPermissions() async {
+    // Request storage permissions on startup
+    try {
+      await PermissionService.instance.ensureStorage();
+    } catch (_) {
+      // Ignore errors if permission is denied
+    }
   }
 
   void _onScroll() {

@@ -36,10 +36,13 @@ class CodePreview extends StatelessWidget {
         ? (lineCount.toString().length * 9.0 + 22)
         : 0.0;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return InteractiveViewer(
+      minScale: 0.5,
+      maxScale: 5.0,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (showLineNumbers)
             Padding(
@@ -66,7 +69,10 @@ class CodePreview extends StatelessWidget {
               padding: const EdgeInsets.only(right: 12),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: HighlightView(
+                child: SelectableRegion(
+                  focusNode: FocusNode(),
+                  selectionControls: materialTextSelectionControls,
+                  child: HighlightView(
                   content,
                   language: language ?? 'plaintext',
                   theme: theme,
@@ -76,11 +82,12 @@ class CodePreview extends StatelessWidget {
                     height: 1.55,
                   ),
                 ),
+                ),
               ),
             ),
           ),
         ],
       ),
-    );
+    ));
   }
 }
