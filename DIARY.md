@@ -8,3 +8,11 @@
 - **Added Code Auto-formatting:** Added an auto-format button in the `EditorScreen` toolbar. This feature normalizes indentation (tabs/spaces) according to bracket/brace matching, making syntax editing easier.
 - **HTML Browser Preview:** Added an option in `FilePreviewScreen`'s AppBar menu to "Preview in Browser" when opening an `.html` file.
 - **Enabled Text Selection in Code Viewer:** Enclosed the `HighlightView` in `CodePreview` within a `SelectableRegion` to allow text selection and copying of code blocks.
+
+## May 6, 2024 - v1.0.0+1
+* **App Logo Update**: Replaced default Flutter icons with the new 'Files Claw' logo using `flutter_launcher_icons` and `flutter_native_splash` to fix overlapping white screen bug.
+* **Editor Features**: Added `MarkdownTextController` to support live syntax styling for Markdown text while editing.
+* **Quick Actions**: Implemented home screen shortcuts using `quick_actions` to allow users to quickly access settings, history, and the last opened file.
+* **Floating Window**: Integrated `flutter_overlay_window` to provide a persistent floating preview of files alongside a persistent status bar notification.
+* **Settings Fixes**: Removed non-functional storage permission trigger from the settings UI.
+* **Zoom Fixes**: Corrected zoom behavior in `TextPreview`, `MarkdownPreview`, and `CodePreview` by disabling pan gestures in the `InteractiveViewer` wrapper to resolve conflicts with internal scroll views.

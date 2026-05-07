@@ -57,13 +57,29 @@ dependencies:
   uuid: ^4.5.0
   equatable: ^2.0.5
   logger: ^2.4.0
+  quick_actions: ^1.1.0
+  flutter_overlay_window: ^0.5.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.4
 
 flutter:
   uses-material-design: true
   assets:
     - assets/icons/
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icons/logo.png"
+
+flutter_native_splash:
+  color: "#282A36"
+  image: "assets/icons/logo.png"
+  android: true
+  ios: false
+  fullscreen: true
