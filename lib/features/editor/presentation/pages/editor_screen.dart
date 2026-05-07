@@ -19,6 +19,7 @@ import '../../../history/presentation/providers/history_provider.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
 import '../providers/editor_provider.dart';
+import '../widgets/markdown_text_controller.dart';
 
 /// Full-screen text/code/markdown editor with Claude-styled toolbar,
 /// undo/redo stacks, encoding control and discard-changes guard.
@@ -42,7 +43,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
   @override
   void initState() {
     super.initState();
-    _textController = TextEditingController();
+    if (widget.file.type == FileType.markdown) { _textController = MarkdownTextController(); } else { _textController = TextEditingController(); }
     _scrollController = ScrollController();
     _bootstrap();
   }

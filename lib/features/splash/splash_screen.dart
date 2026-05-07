@@ -44,12 +44,12 @@ class _SplashScreenState extends State<SplashScreen> {
                     width: 96,
                     height: 96,
                     decoration: BoxDecoration(
-                      color: ClaudeColors.primary,
                       borderRadius: BorderRadius.circular(24),
+                      image: const DecorationImage(
+                        image: AssetImage('assets/icons/logo.png'),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    alignment: Alignment.center,
-                    child: const Icon(Icons.description_outlined,
-                        color: Colors.white, size: 52),
                   )
                       .animate()
                       .fadeIn(duration: 300.ms)

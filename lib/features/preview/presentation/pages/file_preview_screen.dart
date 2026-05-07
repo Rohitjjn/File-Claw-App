@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:open_filex/open_filex.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/themes/claude_colors.dart';
@@ -18,6 +17,8 @@ import '../../../../models/file_type.dart';
 import '../../../../core/utils/file_type_detector.dart';
 import '../providers/preview_provider.dart';
 import '../widgets/archive_tree_view.dart';
+import 'package:flutter_overlay_window/flutter_overlay_window.dart';
+import '../../../../services/notification_service.dart';
 import '../widgets/code_preview.dart';
 import '../widgets/hex_preview.dart';
 import '../widgets/image_preview.dart';
@@ -45,14 +46,44 @@ class _FilePreviewScreenState extends ConsumerState<FilePreviewScreen> {
   @override
   void initState() {
     super.initState();
+    Future.microtask(() async {
+      final config = ref.read(settingsProvider);
+      if (config.persistentFloatingNotification) {
+        AppNotificationService.instance.showFloating(widget.file.name);
+      }
+      if (config.isFloatingWindowEnabled && config.autoFloatOnOpen) {
+        _startFloatingSession();
+      }
+    });
+
     _scroll.addListener(() {
       final next = _scroll.hasClients && _scroll.offset > 4;
       if (next != _scrolled && mounted) setState(() => _scrolled = next);
     });
   }
 
+  Future<void> _startFloatingSession() async {
+    final status = await FlutterOverlayWindow.isPermissionGranted();
+    if (!status) {
+      await FlutterOverlayWindow.requestPermission();
+    } else {
+      if (await FlutterOverlayWindow.isActive()) return;
+      await FlutterOverlayWindow.showOverlay(
+        enableDrag: true,
+        overlayTitle: "Files Claw",
+        overlayContent: widget.file.name,
+        flag: OverlayFlag.defaultFlag,
+        visibility: NotificationVisibility.visibilityPublic,
+        positionGravity: PositionGravity.auto,
+        height: 600,
+        width: WindowSize.matchParent,
+      );
+    }
+  }
+
   @override
   void dispose() {
+    AppNotificationService.instance.dismissFloating();
     _scroll.dispose();
     super.dispose();
   }
@@ -150,43 +181,25 @@ class _FilePreviewScreenState extends ConsumerState<FilePreviewScreen> {
                       case 'properties':
                         await _showProperties();
                         break;
-                      case 'browser_preview':
-                        await OpenFilex.open(widget.file.path);
-                        break;
                     }
                   },
-                  itemBuilder: (_) {
-                    final items = <PopupMenuEntry<String>>[
-                      const PopupMenuItem(
-                          value: 'share',
-                          child: ListTile(
-                              leading: Icon(Icons.share_outlined),
-                              title: Text('Share'))),
-                      const PopupMenuItem(
-                          value: 'properties',
-                          child: ListTile(
-                              leading: Icon(Icons.info_outline),
-                              title: Text('Properties'))),
-                      const PopupMenuItem(
-                          value: 'remove',
-                          child: ListTile(
-                              leading: Icon(Icons.history_toggle_off_outlined),
-                              title: Text('Remove from history'))),
-                    ];
-                    if (widget.file.extension.toLowerCase() == 'html') {
-                      items.insert(
-                        0,
-                        const PopupMenuItem(
-                          value: 'browser_preview',
-                          child: ListTile(
-                            leading: Icon(Icons.web),
-                            title: Text('Preview in Browser'),
-                          ),
-                        ),
-                      );
-                    }
-                    return items;
-                  },
+                  itemBuilder: (_) => const [
+                    PopupMenuItem(
+                        value: 'share',
+                        child: ListTile(
+                            leading: Icon(Icons.share_outlined),
+                            title: Text('Share'))),
+                    PopupMenuItem(
+                        value: 'properties',
+                        child: ListTile(
+                            leading: Icon(Icons.info_outline),
+                            title: Text('Properties'))),
+                    PopupMenuItem(
+                        value: 'remove',
+                        child: ListTile(
+                            leading: Icon(Icons.history_toggle_off_outlined),
+                            title: Text('Remove from history'))),
+                  ],
                 ),
               ],
             ),

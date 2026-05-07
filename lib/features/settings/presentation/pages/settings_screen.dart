@@ -10,10 +10,8 @@ import '../../../../core/widgets/claude_dialog.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../models/file_type.dart';
 import '../../../../services/editor_cache_repository.dart';
-import '../../../../services/permission_service.dart';
 import '../../../history/presentation/providers/history_provider.dart';
 import '../providers/settings_provider.dart';
-
 /// All app preferences live here. Each row is a Claude-styled card section
 /// with 1px borders and ample spacing.
 class SettingsScreen extends ConsumerWidget {
@@ -277,25 +275,6 @@ class SettingsScreen extends ConsumerWidget {
                                   const SnackBar(content: Text('Editor cache cleared')),
                                 );
                               }
-                            }
-                          },
-                        ),
-                        const _Divider(),
-                        _ActionRow(
-                          icon: Icons.lock_outline,
-                          title: 'Storage Permission',
-                          subtitle: 'Re-request storage access',
-                          onTap: () async {
-                            final granted = await PermissionService.instance
-                                .ensureStorage();
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(granted
-                                      ? 'Storage permission granted'
-                                      : 'Storage permission denied'),
-                                ),
-                              );
                             }
                           },
                         ),

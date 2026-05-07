@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quick_actions/quick_actions.dart';
+import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 
 import 'core/constants/app_constants.dart';
 import 'core/themes/app_theme.dart';
@@ -16,6 +18,37 @@ import 'models/file_item.dart';
 import 'services/config_repository.dart';
 import 'services/editor_cache_repository.dart';
 import 'services/notification_service.dart';
+import 'services/history_repository.dart';
+
+@pragma("vm:entry-point")
+void overlayMain() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: Colors.white.withValues(alpha: 0.9),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("Files Claw Floating View"),
+              ElevatedButton(
+                onPressed: () {
+                  FlutterOverlayWindow.closeOverlay();
+                },
+                child: const Text("Close"),
+              )
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+// Global key to control navigation from quick actions
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,13 +71,50 @@ Future<void> main() async {
   runApp(const ProviderScope(child: FilesClawApp()));
 }
 
-class FilesClawApp extends ConsumerWidget {
+class FilesClawApp extends ConsumerStatefulWidget {
   const FilesClawApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FilesClawApp> createState() => _FilesClawAppState();
+}
+
+class _FilesClawAppState extends ConsumerState<FilesClawApp> {
+  final QuickActions quickActions = const QuickActions();
+
+  @override
+  void initState() {
+    super.initState();
+    _setupQuickActions();
+  }
+
+  void _setupQuickActions() {
+    quickActions.initialize((String shortcutType) async {
+      await Future.delayed(const Duration(milliseconds: 100)); // wait for navigator
+      if (shortcutType == 'action_settings') {
+        navigatorKey.currentState?.pushNamed('/settings');
+      } else if (shortcutType == 'action_history') {
+        navigatorKey.currentState?.pushNamed('/home');
+      } else if (shortcutType == 'action_last_opened') {
+        final hist = await HistoryRepository.instance.load();
+        if (hist.isNotEmpty) {
+          final last = hist.first;
+          navigatorKey.currentState?.pushNamed('/preview', arguments: last);
+        }
+      }
+    });
+
+    quickActions.setShortcutItems(<ShortcutItem>[
+      const ShortcutItem(type: 'action_last_opened', localizedTitle: 'Last Opened File', icon: 'icon_file'),
+      const ShortcutItem(type: 'action_history', localizedTitle: 'History', icon: 'icon_history'),
+      const ShortcutItem(type: 'action_settings', localizedTitle: 'Settings', icon: 'icon_settings'),
+    ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final themeMode = ref.watch(themeModeProvider);
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
       themeMode: themeMode,
