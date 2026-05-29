@@ -84,12 +84,12 @@ class AppNotificationService {
       await _plugin.show(
         _persistentId,
         'Files Claw — $fileName',
-        'Tap to open the floating preview.',
+        'Tap to open the file.',
         const NotificationDetails(
           android: AndroidNotificationDetails(
             _channelPersistent,
-            'Floating Window',
-            channelDescription: 'Persistent notification for floating preview',
+            'Opened File',
+            channelDescription: 'Persistent notification for opened file',
             ongoing: true,
             autoCancel: false,
             importance: Importance.low,
