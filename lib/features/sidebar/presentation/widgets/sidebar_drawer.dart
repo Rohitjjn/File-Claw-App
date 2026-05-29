@@ -83,24 +83,6 @@ class SidebarDrawer extends ConsumerWidget {
                     ),
             ),
             Container(height: 1, color: divider),
-            _SidebarFooter(
-              cfg: cfg,
-              onSettings: () {
-                Navigator.of(context).pop();
-                onOpenSettings();
-              },
-              onToggleTheme: () {
-                final notifier = ref.read(settingsProvider.notifier);
-                final next = cfg.themeMode == AppThemeMode.dark
-                    ? AppThemeMode.light
-                    : AppThemeMode.dark;
-                notifier.setThemeMode(next);
-              },
-              onAbout: () {
-                Navigator.of(context).pop();
-                onOpenAbout();
-              },
-            ),
           ],
         ),
       ),
@@ -211,70 +193,6 @@ class _HistoryTile extends StatelessWidget {
         isActive: isActive,
         onTap: onTap,
         minHeight: 56,
-      ),
-    );
-  }
-}
-
-class _SidebarFooter extends StatelessWidget {
-  final AppConfig cfg;
-  final VoidCallback onSettings;
-  final VoidCallback onToggleTheme;
-  final VoidCallback onAbout;
-
-  const _SidebarFooter({
-    required this.cfg,
-    required this.onSettings,
-    required this.onToggleTheme,
-    required this.onAbout,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = cfg.themeMode == AppThemeMode.dark ||
-        (cfg.themeMode == AppThemeMode.system &&
-            Theme.of(context).brightness == Brightness.dark);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Column(
-        children: [
-          ClaudeListTile(
-            leading: const Icon(Icons.settings_outlined, size: 22),
-            title: 'Settings',
-            onTap: onSettings,
-            minHeight: 48,
-          ),
-          ClaudeListTile(
-            leading: Icon(
-              isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
-              size: 22,
-            ),
-            title: 'Theme',
-            trailing: Switch.adaptive(
-              value: isDark,
-              onChanged: (_) => onToggleTheme(),
-            ),
-            onTap: onToggleTheme,
-            minHeight: 48,
-          ),
-          ClaudeListTile(
-            leading: const Icon(Icons.info_outline, size: 22),
-            title: 'About Files Claw',
-            onTap: onAbout,
-            minHeight: 48,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'v${AppConstants.appVersion}',
-            style: TextStyle(
-              fontSize: 11,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? ClaudeColors.darkTextSecondary
-                  : ClaudeColors.lightTextSecondary,
-            ),
-          ),
-          const SizedBox(height: 8),
-        ],
       ),
     );
   }
