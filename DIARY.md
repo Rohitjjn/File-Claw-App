@@ -19,3 +19,6 @@
 
 ## May 29, 2024 - v1.0.0+1
 * **Architecture Blueprint Generation**: Analyzed the entire codebase and generated a comprehensive `project-blueprint.md` file. This document details the tech stack (Flutter `^3.35.0`, Riverpod, no local DB yet), design system, app structure, platform configurations (Android only), and dependencies. It acts as a guide to understand how the app works behind the scenes without adding any non-existent features.
+* **App Logo Update**: Updated app logo to `app logo.png` removing white borders using `flutter_launcher_icons` and `flutter_native_splash`.
+* **History Item 3-Dot Menu**: Replaced the trailing cross icon on recent history files and sidebar drawer items with a popup menu containing Select, Open with, Delete, Share, and Settings.
+* **Advanced Search**: Modified `SearchScreen` to query both local files concurrently with history file search. History results display up to 3 results with a show more button, local results deduplicate by path against history results, with distinct background colors (blue for local files, orange for history). Added `LocalSearchService` to iterate local downloads/documents folders on Android.

@@ -82,3 +82,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - `2024-05-29` — Fixed "Last Opened File" quick action hanging issue by updating navigation logic.
+
+### Changed
+- Updated the app logo using the provided image (no white borders).
+- Added a 3-dot premium Claude-style menu to history items for both the home screen and sidebar drawer.
+- Implemented advanced search logic combining local file search with history query.
