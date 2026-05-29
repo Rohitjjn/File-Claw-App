@@ -16,3 +16,6 @@
 * **Floating Window**: Integrated `flutter_overlay_window` to provide a persistent floating preview of files alongside a persistent status bar notification.
 * **Settings Fixes**: Removed non-functional storage permission trigger from the settings UI.
 * **Zoom Fixes**: Corrected zoom behavior in `TextPreview`, `MarkdownPreview`, and `CodePreview` by disabling pan gestures in the `InteractiveViewer` wrapper to resolve conflicts with internal scroll views.
+
+## May 29, 2024 - v1.0.0+1
+* **Architecture Blueprint Generation**: Analyzed the entire codebase and generated a comprehensive `project-blueprint.md` file. This document details the tech stack (Flutter `^3.35.0`, Riverpod, no local DB yet), design system, app structure, platform configurations (Android only), and dependencies. It acts as a guide to understand how the app works behind the scenes without adding any non-existent features.
