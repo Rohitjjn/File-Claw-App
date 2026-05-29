@@ -185,10 +185,70 @@ class _HistoryTile extends StatelessWidget {
         leading: FileIconBadge(type: item.type, size: 32),
         title: item.name,
         subtitle: TimeFormat.relative(item.lastOpened),
-        trailing: IconButton(
-          icon: const Icon(Icons.close, size: 18),
-          tooltip: 'Remove from history',
-          onPressed: onRemove,
+        trailing: PopupMenuButton<String>(
+          icon: const Icon(Icons.more_vert, size: 20),
+          tooltip: 'Menu',
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: 'select',
+              child: ListTile(
+                leading: Icon(Icons.check_circle_outline, size: 20),
+                title: Text('Select'),
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+              ),
+            ),
+            const PopupMenuItem(
+              value: 'open_with',
+              child: ListTile(
+                leading: Icon(Icons.open_in_new, size: 20),
+                title: Text('Open with'),
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+              ),
+            ),
+            PopupMenuItem(
+              value: 'delete',
+              child: ListTile(
+                leading: Icon(Icons.delete_outline, size: 20, color: ClaudeColors.error),
+                title: Text('Delete', style: TextStyle(color: ClaudeColors.error)),
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+              ),
+            ),
+            const PopupMenuItem(
+              value: 'share',
+              child: ListTile(
+                leading: Icon(Icons.share_outlined, size: 20),
+                title: Text('Share'),
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+              ),
+            ),
+            const PopupMenuItem(
+              value: 'settings',
+              child: ListTile(
+                leading: Icon(Icons.settings_outlined, size: 20),
+                title: Text('Settings'),
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+              ),
+            ),
+          ],
+          onSelected: (value) {
+            if (value == 'delete') {
+              onRemove();
+            } else if (value == 'settings') {
+              Navigator.of(context).pushNamed('/settings');
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Action $value not fully implemented yet')),
+              );
+            }
+          },
         ),
         isActive: isActive,
         onTap: onTap,
