@@ -52,15 +52,6 @@ class SettingsNotifier extends StateNotifier<AppConfig> {
   Future<void> setDefaultEncoding(String enc) =>
       _persist(state.copyWith(defaultEncoding: enc));
 
-  Future<void> setFloatingEnabled(bool v) =>
-      _persist(state.copyWith(isFloatingWindowEnabled: v));
-
-  Future<void> setAutoFloatOnOpen(bool v) =>
-      _persist(state.copyWith(autoFloatOnOpen: v));
-
-  Future<void> setFloatingOpacity(double v) =>
-      _persist(state.copyWith(floatingWindowOpacity: v.clamp(0.5, 1.0)));
-
   Future<void> setNotificationOnOpen(bool v) =>
       _persist(state.copyWith(notificationOnOpen: v));
 
@@ -69,9 +60,6 @@ class SettingsNotifier extends StateNotifier<AppConfig> {
 
   Future<void> setNotificationLowStorage(bool v) =>
       _persist(state.copyWith(notificationLowStorage: v));
-
-  Future<void> setPersistentFloatingNotification(bool v) =>
-      _persist(state.copyWith(persistentFloatingNotification: v));
 }
 
 final settingsProvider =

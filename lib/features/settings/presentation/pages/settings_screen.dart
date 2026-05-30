@@ -170,36 +170,6 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                   ),
 
-                  // ─── Floating Window ────────────────────────────
-                  const SectionHeader(label: 'Floating Window', padding: EdgeInsets.fromLTRB(4, 24, 4, 8)),
-                  ClaudeCard(
-                    padding: EdgeInsets.zero,
-                    child: Column(
-                      children: [
-                        _SwitchRow(
-                          title: 'Enable Floating Window',
-                          subtitle: 'Show file overlays on top of other apps',
-                          value: cfg.isFloatingWindowEnabled,
-                          onChanged: notifier.setFloatingEnabled,
-                        ),
-                        const _Divider(),
-                        _SwitchRow(
-                          title: 'Auto-float on Open',
-                          value: cfg.autoFloatOnOpen,
-                          onChanged: notifier.setAutoFloatOnOpen,
-                        ),
-                        const _Divider(),
-                        _SliderRow(
-                          title: 'Window Opacity',
-                          value: cfg.floatingWindowOpacity,
-                          min: 0.5,
-                          max: 1.0,
-                          divisions: 5,
-                          onChanged: notifier.setFloatingOpacity,
-                        ),
-                      ],
-                    ),
-                  ),
 
                   // ─── Storage & History ──────────────────────────
                   const SectionHeader(label: 'Storage & History', padding: EdgeInsets.fromLTRB(4, 24, 4, 8)),
@@ -298,12 +268,6 @@ class SettingsScreen extends ConsumerWidget {
                           title: 'Save Complete',
                           value: cfg.notificationOnSave,
                           onChanged: notifier.setNotificationOnSave,
-                        ),
-                        const _Divider(),
-                        _SwitchRow(
-                          title: 'Persistent Floating Notification',
-                          value: cfg.persistentFloatingNotification,
-                          onChanged: notifier.setPersistentFloatingNotification,
                         ),
                         const _Divider(),
                         _SwitchRow(

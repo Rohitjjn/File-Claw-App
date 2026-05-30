@@ -10,9 +10,6 @@ class AppConfig {
   final String id;
   final int schemaVersion;
   final AppThemeMode themeMode;
-  final bool isFloatingWindowEnabled;
-  final bool autoFloatOnOpen;
-  final double floatingWindowOpacity; // 0.5 - 1.0
   final int historyLimit; // 10 - 100
   final String defaultEncoding;
   final bool showLineNumbers;
@@ -24,15 +21,11 @@ class AppConfig {
   final bool notificationOnOpen;
   final bool notificationOnSave;
   final bool notificationLowStorage;
-  final bool persistentFloatingNotification;
 
   const AppConfig({
     this.id = singletonId,
     this.schemaVersion = currentSchemaVersion,
     this.themeMode = AppThemeMode.light,
-    this.isFloatingWindowEnabled = true,
-    this.autoFloatOnOpen = false,
-    this.floatingWindowOpacity = 1.0,
     this.historyLimit = 20,
     this.defaultEncoding = 'utf-8',
     this.showLineNumbers = true,
@@ -44,14 +37,10 @@ class AppConfig {
     this.notificationOnOpen = true,
     this.notificationOnSave = true,
     this.notificationLowStorage = true,
-    this.persistentFloatingNotification = true,
   });
 
   AppConfig copyWith({
     AppThemeMode? themeMode,
-    bool? isFloatingWindowEnabled,
-    bool? autoFloatOnOpen,
-    double? floatingWindowOpacity,
     int? historyLimit,
     String? defaultEncoding,
     bool? showLineNumbers,
@@ -63,17 +52,11 @@ class AppConfig {
     bool? notificationOnOpen,
     bool? notificationOnSave,
     bool? notificationLowStorage,
-    bool? persistentFloatingNotification,
   }) {
     return AppConfig(
       id: id,
       schemaVersion: schemaVersion,
       themeMode: themeMode ?? this.themeMode,
-      isFloatingWindowEnabled:
-          isFloatingWindowEnabled ?? this.isFloatingWindowEnabled,
-      autoFloatOnOpen: autoFloatOnOpen ?? this.autoFloatOnOpen,
-      floatingWindowOpacity:
-          floatingWindowOpacity ?? this.floatingWindowOpacity,
       historyLimit: historyLimit ?? this.historyLimit,
       defaultEncoding: defaultEncoding ?? this.defaultEncoding,
       showLineNumbers: showLineNumbers ?? this.showLineNumbers,
@@ -86,8 +69,6 @@ class AppConfig {
       notificationOnSave: notificationOnSave ?? this.notificationOnSave,
       notificationLowStorage:
           notificationLowStorage ?? this.notificationLowStorage,
-      persistentFloatingNotification:
-          persistentFloatingNotification ?? this.persistentFloatingNotification,
     );
   }
 
@@ -95,9 +76,6 @@ class AppConfig {
         'id': id,
         'schemaVersion': schemaVersion,
         'themeMode': themeMode.name,
-        'isFloatingWindowEnabled': isFloatingWindowEnabled,
-        'autoFloatOnOpen': autoFloatOnOpen,
-        'floatingWindowOpacity': floatingWindowOpacity,
         'historyLimit': historyLimit,
         'defaultEncoding': defaultEncoding,
         'showLineNumbers': showLineNumbers,
@@ -109,7 +87,6 @@ class AppConfig {
         'notificationOnOpen': notificationOnOpen,
         'notificationOnSave': notificationOnSave,
         'notificationLowStorage': notificationLowStorage,
-        'persistentFloatingNotification': persistentFloatingNotification,
       };
 
   factory AppConfig.fromJson(Map<String, dynamic> json) {
@@ -118,10 +95,6 @@ class AppConfig {
       schemaVersion: (json['schemaVersion'] as num?)?.toInt() ?? currentSchemaVersion,
       themeMode: _parseEnum(
           AppThemeMode.values, json['themeMode'] as String?, AppThemeMode.light),
-      isFloatingWindowEnabled: json['isFloatingWindowEnabled'] as bool? ?? true,
-      autoFloatOnOpen: json['autoFloatOnOpen'] as bool? ?? false,
-      floatingWindowOpacity:
-          (json['floatingWindowOpacity'] as num?)?.toDouble() ?? 1.0,
       historyLimit: (json['historyLimit'] as num?)?.toInt() ?? 20,
       defaultEncoding: json['defaultEncoding'] as String? ?? 'utf-8',
       showLineNumbers: json['showLineNumbers'] as bool? ?? true,
@@ -134,8 +107,6 @@ class AppConfig {
       notificationOnOpen: json['notificationOnOpen'] as bool? ?? true,
       notificationOnSave: json['notificationOnSave'] as bool? ?? true,
       notificationLowStorage: json['notificationLowStorage'] as bool? ?? true,
-      persistentFloatingNotification:
-          json['persistentFloatingNotification'] as bool? ?? true,
     );
   }
 

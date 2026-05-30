@@ -18,16 +18,24 @@ class SectionHeader extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: padding,
-      child: Text(
-        label.toUpperCase(),
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 1.2,
-          color: isDark
-              ? ClaudeColors.darkTextSecondary
-              : ClaudeColors.lightTextSecondary,
-        ),
+      child: Row(
+        children: [
+          if (label.toUpperCase() == 'RECENT FILES') ...[
+            const Icon(Icons.history, size: 14, color: ClaudeColors.primary),
+            const SizedBox(width: 8),
+          ],
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
+              color: isDark
+                  ? ClaudeColors.darkTextSecondary
+                  : ClaudeColors.lightTextSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }

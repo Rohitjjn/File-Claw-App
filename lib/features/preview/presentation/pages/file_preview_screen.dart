@@ -17,7 +17,6 @@ import '../../../../models/file_type.dart';
 import '../../../../core/utils/file_type_detector.dart';
 import '../providers/preview_provider.dart';
 import '../widgets/archive_tree_view.dart';
-import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import '../../../../services/notification_service.dart';
 import '../widgets/code_preview.dart';
 import '../widgets/hex_preview.dart';
@@ -48,11 +47,8 @@ class _FilePreviewScreenState extends ConsumerState<FilePreviewScreen> {
     super.initState();
     Future.microtask(() async {
       final config = ref.read(settingsProvider);
-      if (config.persistentFloatingNotification) {
-        AppNotificationService.instance.showFloating(widget.file.name);
-      }
-      if (config.isFloatingWindowEnabled && config.autoFloatOnOpen) {
-        _startFloatingSession();
+      if (config.notificationOnOpen) {
+        AppNotificationService.instance.showFileOpenNotification(widget.file.name);
       }
     });
 
@@ -62,28 +58,8 @@ class _FilePreviewScreenState extends ConsumerState<FilePreviewScreen> {
     });
   }
 
-  Future<void> _startFloatingSession() async {
-    final status = await FlutterOverlayWindow.isPermissionGranted();
-    if (!status) {
-      await FlutterOverlayWindow.requestPermission();
-    } else {
-      if (await FlutterOverlayWindow.isActive()) return;
-      await FlutterOverlayWindow.showOverlay(
-        enableDrag: true,
-        overlayTitle: "Files Claw",
-        overlayContent: widget.file.name,
-        flag: OverlayFlag.defaultFlag,
-        visibility: NotificationVisibility.visibilityPublic,
-        positionGravity: PositionGravity.auto,
-        height: 600,
-        width: WindowSize.matchParent,
-      );
-    }
-  }
-
   @override
   void dispose() {
-    AppNotificationService.instance.dismissFloating();
     _scroll.dispose();
     super.dispose();
   }
@@ -95,10 +71,7 @@ class _FilePreviewScreenState extends ConsumerState<FilePreviewScreen> {
     if (cfg.notificationOnOpen) {
       ref
           .read(notificationServiceProvider)
-          .notifyTransient('File opened', file.name);
-    }
-    if (cfg.persistentFloatingNotification && cfg.isFloatingWindowEnabled) {
-      ref.read(notificationServiceProvider).showFloating(file.name);
+          .showFileOpenNotification(file.name);
     }
   }
 

@@ -19,3 +19,12 @@
 
 ## May 29, 2024 - v1.0.0+1
 * **Architecture Blueprint Generation**: Analyzed the entire codebase and generated a comprehensive `project-blueprint.md` file. This document details the tech stack (Flutter `^3.35.0`, Riverpod, no local DB yet), design system, app structure, platform configurations (Android only), and dependencies. It acts as a guide to understand how the app works behind the scenes without adding any non-existent features.
+
+## May 30, 2024 - v1.0.0+1
+* **UI Simplification & Performance**:
+    - Simplified the sidebar by removing Settings, Theme, and About buttons, leaving only History and Version.
+    - Added orange history icons to the Recent Files sections for better visual cues.
+    - Fixed a UI hang by offloading JSON history parsing to a background thread using `compute`.
+* **Feature Removal**:
+    - Completely removed the Floating Window system (`flutter_overlay_window`) to streamline the app.
+    - Repurposed the open notification to be a standard notification with the text: "Tap to open the file".

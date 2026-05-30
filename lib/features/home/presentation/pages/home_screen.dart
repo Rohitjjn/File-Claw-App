@@ -248,6 +248,8 @@ class _PopulatedHome extends StatelessWidget {
             const SizedBox(height: 24),
             Row(
               children: [
+                const Icon(Icons.history, size: 18, color: ClaudeColors.primary),
+                const SizedBox(width: 8),
                 Text(
                   'Recent Files',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
