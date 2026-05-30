@@ -36,6 +36,15 @@ Future<void> main() async {
   // ignore: discarded_futures
   EditorCacheRepository.instance.pruneStale();
 
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.transparent,
+    ),
+  );
+
   runApp(const ProviderScope(child: FilesClawApp()));
 }
 
@@ -63,10 +72,18 @@ class _FilesClawAppState extends ConsumerState<FilesClawApp> {
       } else if (shortcutType == 'action_history') {
         navigatorKey.currentState?.pushNamed('/home');
       } else if (shortcutType == 'action_last_opened') {
-        final hist = await HistoryRepository.instance.load();
-        if (hist.isNotEmpty) {
-          final last = hist.first;
-          navigatorKey.currentState?.pushNamed('/preview', arguments: last);
+        try {
+          // Pre-warm config if needed for HistoryRepository path resolution
+          await ConfigRepository.instance.load();
+          final hist = await HistoryRepository.instance.load();
+          if (hist.isNotEmpty) {
+            final last = hist.first;
+            navigatorKey.currentState?.pushNamed('/preview', arguments: last);
+          } else {
+            navigatorKey.currentState?.pushNamed('/home');
+          }
+        } catch (_) {
+          navigatorKey.currentState?.pushNamed('/home');
         }
       }
     });
