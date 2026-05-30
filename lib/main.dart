@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quick_actions/quick_actions.dart';
+import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 
 import 'core/constants/app_constants.dart';
 import 'core/themes/app_theme.dart';
@@ -18,6 +19,33 @@ import 'services/config_repository.dart';
 import 'services/editor_cache_repository.dart';
 import 'services/notification_service.dart';
 import 'services/history_repository.dart';
+
+@pragma("vm:entry-point")
+void overlayMain() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: Colors.white.withValues(alpha: 0.9),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("Files Claw Floating View"),
+              ElevatedButton(
+                onPressed: () {
+                  FlutterOverlayWindow.closeOverlay();
+                },
+                child: const Text("Close"),
+              )
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
 
 // Global key to control navigation from quick actions
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -70,8 +98,7 @@ class _FilesClawAppState extends ConsumerState<FilesClawApp> {
         final hist = await HistoryRepository.instance.load();
         if (hist.isNotEmpty) {
           final last = hist.first;
-          // Use pushNamedAndRemoveUntil to ensure the stack is clean
-          navigatorKey.currentState?.pushNamedAndRemoveUntil('/preview', (route) => route.isFirst, arguments: last);
+          navigatorKey.currentState?.pushNamed('/preview', arguments: last);
         }
       }
     });
