@@ -74,7 +74,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           children: [
             ClaudeAppBar(
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back, color: ClaudeColors.primary),
                 onPressed: () => Navigator.of(context).maybePop(),
               ),
               title: const Text('Search'),
@@ -88,7 +88,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
                   hintText: 'Search file history…',
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: const Icon(Icons.search, color: ClaudeColors.primary),
                   suffixIcon: _query.isEmpty
                       ? null
                       : IconButton(

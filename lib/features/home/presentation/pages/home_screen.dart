@@ -122,7 +122,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               leading: Builder(
                 builder: (ctx) => IconButton(
                   tooltip: 'Open menu',
-                  icon: const Icon(Icons.menu),
+                  icon: const Icon(Icons.menu, color: ClaudeColors.primary),
                   onPressed: () => Scaffold.of(ctx).openDrawer(),
                 ),
               ),
@@ -131,12 +131,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               actions: [
                 IconButton(
                   tooltip: 'Search',
-                  icon: const Icon(Icons.search),
+                  icon: const Icon(Icons.search, color: ClaudeColors.primary),
                   onPressed: () => Navigator.of(context).pushNamed('/search'),
                 ),
                 IconButton(
                   tooltip: 'Settings',
-                  icon: const Icon(Icons.settings_outlined),
+                  icon: const Icon(Icons.settings_outlined, color: ClaudeColors.primary),
                   onPressed: () =>
                       Navigator.of(context).pushNamed('/settings'),
                 ),
@@ -184,7 +184,7 @@ class _EmptyHome extends StatelessWidget {
               iconSize: 96,
               action: ClaudePrimaryButton(
                 label: 'Select File',
-                icon: Icons.add,
+                icon: Icons.add_circle_outline,
                 onPressed: onSelect,
                 isLoading: picking,
                 width: 320,
@@ -298,7 +298,7 @@ class _PopulatedHome extends StatelessWidget {
               constraints: const BoxConstraints(maxWidth: 320),
               child: ClaudePillButton(
                 label: picking ? 'Opening…' : 'Open New File',
-                icon: Icons.add,
+                icon: Icons.add_circle_outline,
                 onPressed: picking ? null : onPick,
               ),
             ),

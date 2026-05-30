@@ -118,7 +118,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       if (cfg.notificationOnSave) {
         ref
             .read(notificationServiceProvider)
-            .notifyTransient('File saved', widget.file.name);
+            .showFileSaveNotification(widget.file.name);
       }
       HapticFeedback.lightImpact();
     } catch (_) {
@@ -282,7 +282,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       children: [
         ClaudeAppBar(
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back, color: ClaudeColors.primary),
             onPressed: () async {
               final ok = await _confirmDiscard();
               if (ok && mounted) Navigator.of(context).pop();
@@ -293,7 +293,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           actions: [
             IconButton(
               tooltip: 'Undo',
-              icon: const Icon(Icons.undo),
+              icon: const Icon(Icons.undo, color: ClaudeColors.primary),
               onPressed: state.canUndo
                   ? () {
                       ref.read(_provider.notifier).undo();
@@ -305,7 +305,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
             ),
             IconButton(
               tooltip: 'Redo',
-              icon: const Icon(Icons.redo),
+              icon: const Icon(Icons.redo, color: ClaudeColors.primary),
               onPressed: state.canRedo
                   ? () {
                       ref.read(_provider.notifier).redo();
