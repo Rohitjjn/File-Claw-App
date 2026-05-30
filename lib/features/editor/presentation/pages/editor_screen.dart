@@ -46,6 +46,9 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     if (widget.file.type == FileType.markdown) { _textController = MarkdownTextController(); } else { _textController = TextEditingController(); }
     _scrollController = ScrollController();
     _bootstrap();
+    Future.microtask(() {
+      AppNotificationService.instance.showFileOngoingNotification(widget.file.name);
+    });
   }
 
   Future<void> _bootstrap() async {
@@ -81,6 +84,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
 
   @override
   void dispose() {
+    AppNotificationService.instance.cancelFileOngoingNotification(widget.file.name);
     _autosaveTimer?.cancel();
     _textController.dispose();
     _scrollController.dispose();

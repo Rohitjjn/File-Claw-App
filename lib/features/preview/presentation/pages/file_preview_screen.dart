@@ -50,6 +50,7 @@ class _FilePreviewScreenState extends ConsumerState<FilePreviewScreen> {
       if (config.notificationOnOpen) {
         AppNotificationService.instance.showFileOpenNotification(widget.file.name);
       }
+      AppNotificationService.instance.showFileOngoingNotification(widget.file.name);
     });
 
     _scroll.addListener(() {
@@ -60,6 +61,7 @@ class _FilePreviewScreenState extends ConsumerState<FilePreviewScreen> {
 
   @override
   void dispose() {
+    AppNotificationService.instance.cancelFileOngoingNotification(widget.file.name);
     _scroll.dispose();
     super.dispose();
   }
