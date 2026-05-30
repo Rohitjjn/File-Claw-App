@@ -29,3 +29,6 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fixed UI lag and freezing when opening large Text and Code files by switching preview rendering to a lazy line-by-line `ListView` approach instead of rendering the entire content at once.
 - Added pinch-to-zoom support for Text, Code, and Markdown previews using a custom InteractiveViewer wrapper (`ZoomableView`).
+
+### Fixed
+- Fixed build error caused by missing import of `AppNotificationService` in EditorScreen.

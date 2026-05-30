@@ -15,6 +15,7 @@ import '../../../../models/editor_state.dart';
 import '../../../../models/file_item.dart';
 import '../../../../models/file_type.dart';
 import '../../../../services/file_reader_service.dart';
+import '../../../../services/notification_service.dart';
 import '../../../history/presentation/providers/history_provider.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
