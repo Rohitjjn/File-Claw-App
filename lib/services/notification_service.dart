@@ -29,12 +29,15 @@ class AppNotificationService {
       if (Platform.isAndroid) {
         final android = _plugin.resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>();
+
+        await android?.requestNotificationsPermission();
+
         await android?.createNotificationChannel(
           const AndroidNotificationChannel(
             _channelTransient,
             'Status',
             description: 'File open and save notifications',
-            importance: Importance.low,
+            importance: Importance.high,
           ),
         );
       }
@@ -72,7 +75,7 @@ class AppNotificationService {
     if (!_initialised) await init();
     try {
       await _plugin.show(
-        fileName.hashCode,
+        fileName.hashCode.abs(),
         'Files Claw — $fileName',
         'Tap to open the file',
         const NotificationDetails(

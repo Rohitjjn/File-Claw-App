@@ -16,3 +16,9 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.0+1] - 2024-05-29
 - Initial release documentation and architecture blueprint.
+
+### Fixed
+- Fixed quick actions shortcut icons not displaying (added vector drawables).
+- Fixed quick actions "Last Opened File" causing the app to hang (added exception handling and config pre-warming).
+- Fixed system status bar rendering as black by explicitly removing full-screen mode from Android styles and applying proper `SystemUiOverlayStyle`.
+- Fixed file opening notifications failing due to invalid negative notification IDs and missing Android 13 runtime notification permissions.

@@ -28,3 +28,10 @@
 * **Feature Removal**:
     - Completely removed the Floating Window system (`flutter_overlay_window`) to streamline the app.
     - Repurposed the open notification to be a standard notification with the text: "Tap to open the file".
+
+## 2024-05-30
+### General Fixes & Enhancements
+- Created proper vector icons (`icon_history.xml`, `icon_file.xml`, `icon_settings.xml`) in Android resources to be used by Quick Actions shortcuts.
+- Addressed a hang issue when tapping the "Last Opened File" shortcut by adding error handling and initializing config in `lib/main.dart` before loading history.
+- Restored the system status bar visibility by fixing the `SystemUiOverlayStyle` configuration in Flutter (`lib/core/themes/app_theme.dart`, `lib/main.dart`) and clearing `windowFullscreen` in Android XML styles to ensure it remains transparent and visible instead of a black bar.
+- Repaired notifications when opening files by ensuring `hashCode.abs()` is used for positive integer notification IDs, and properly requesting notification permissions at startup for newer Android devices in `lib/services/notification_service.dart`.
