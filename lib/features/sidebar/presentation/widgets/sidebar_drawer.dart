@@ -142,12 +142,12 @@ class _Header extends StatelessWidget {
           ),
           IconButton(
             tooltip: 'Search history',
-            icon: const Icon(Icons.search, size: 22),
+            icon: const Icon(Icons.search, size: 22, color: ClaudeColors.primary),
             onPressed: onSearch,
           ),
           IconButton(
             tooltip: 'New file',
-            icon: const Icon(Icons.add, color: ClaudeColors.primary, size: 24),
+            icon: const Icon(Icons.add_circle_outline, color: ClaudeColors.primary, size: 24),
             onPressed: onNewFile,
           ),
         ],

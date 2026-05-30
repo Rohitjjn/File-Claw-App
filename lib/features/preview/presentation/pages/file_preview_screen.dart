@@ -126,7 +126,7 @@ class _FilePreviewScreenState extends ConsumerState<FilePreviewScreen> {
             ClaudeAppBar(
               showBottomDivider: _scrolled,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back, color: ClaudeColors.primary),
                 onPressed: () => Navigator.of(context).maybePop(),
               ),
               title: Text(widget.file.name,
@@ -135,12 +135,12 @@ class _FilePreviewScreenState extends ConsumerState<FilePreviewScreen> {
                 if (widget.file.isEditable)
                   IconButton(
                     tooltip: 'Edit',
-                    icon: const Icon(Icons.edit_outlined),
+                    icon: const Icon(Icons.edit_outlined, color: ClaudeColors.primary),
                     onPressed: _openEditor,
                   ),
                 PopupMenuButton<String>(
                   tooltip: 'More',
-                  icon: const Icon(Icons.more_vert),
+                  icon: const Icon(Icons.more_vert, color: ClaudeColors.primary),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                   onSelected: (v) async {

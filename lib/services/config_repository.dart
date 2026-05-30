@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import '../models/app_config.dart';
 import 'storage_paths.dart';
@@ -25,7 +26,7 @@ class ConfigRepository {
         _cached = const AppConfig();
         return _cached!;
       }
-      final decoded = jsonDecode(raw) as Map<String, dynamic>;
+      final decoded = await compute(jsonDecode, raw) as Map<String, dynamic>;
       _cached = AppConfig.fromJson(decoded);
       return _cached!;
     } catch (_) {

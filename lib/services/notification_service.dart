@@ -80,14 +80,37 @@ class AppNotificationService {
             _channelTransient,
             'Status',
             channelDescription: 'File open and save notifications',
-            importance: Importance.low,
-            priority: Priority.low,
+            importance: Importance.high,
+            priority: Priority.high,
             icon: '@mipmap/ic_launcher',
           ),
         ),
       );
     } catch (e) {
       _log.w('showFileOpenNotification failed: $e');
+    }
+  }
+
+  Future<void> showFileSaveNotification(String fileName) async {
+    if (!_initialised) await init();
+    try {
+      await _plugin.show(
+        fileName.hashCode.abs() + 1,
+        'Files Claw — $fileName',
+        'File saved successfully',
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            _channelTransient,
+            'Status',
+            channelDescription: 'File open and save notifications',
+            importance: Importance.high,
+            priority: Priority.high,
+            icon: '@mipmap/ic_launcher',
+          ),
+        ),
+      );
+    } catch (e) {
+      _log.w('showFileSaveNotification failed: $e');
     }
   }
 }
