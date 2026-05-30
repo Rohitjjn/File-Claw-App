@@ -113,7 +113,8 @@ lib/
 ## 7. Platform-Specific Configuration
 ### Android
 - `minSdk`: 26, `targetSdk`: 34, `compileSdk`: 35.
-- `AndroidManifest.xml`: Requires external storage read/write permissions, `MANAGE_EXTERNAL_STORAGE` (ScopedStorage ignored), `POST_NOTIFICATIONS`, `FOREGROUND_SERVICE`.
+- `AndroidManifest.xml`: Requires external storage read/write permissions, `MANAGE_EXTERNAL_STORAGE` (ScopedStorage ignored), `SYSTEM_ALERT_WINDOW`, `POST_NOTIFICATIONS`, `FOREGROUND_SERVICE`.
+- Uses `flutter_overlay_window` for floating view.
 
 ### iOS
 - Not yet implemented — no `ios/` directory found.
@@ -140,6 +141,7 @@ Key packages from `pubspec.yaml`:
 - `flutter_local_notifications: ^17.2.3` (Notifications)
 - `go_router: ^14.2.7` (Unused)
 - `quick_actions: ^1.1.0` (Shortcuts)
+- `flutter_overlay_window: ^0.5.0` (Android Overlay)
 - `file_picker: ^8.1.2`, `open_filex: ^4.5.0`, `mime: ^1.0.6` (File handling)
 - `permission_handler: ^11.3.1`, `device_info_plus: ^10.1.2`, `share_plus: ^10.0.2` (Device & Permissions)
 
