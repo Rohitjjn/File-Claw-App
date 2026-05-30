@@ -25,3 +25,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Added a silent, ongoing notification while a file is open in the app that cannot be dismissed by the user and is cleared when the file is closed. Tapping the notification brings the file to the foreground.
+
+### Fixed
+- Fixed UI lag and freezing when opening large Text and Code files by switching preview rendering to a lazy line-by-line `ListView` approach instead of rendering the entire content at once.
+- Added pinch-to-zoom support for Text, Code, and Markdown previews using a custom InteractiveViewer wrapper (`ZoomableView`).

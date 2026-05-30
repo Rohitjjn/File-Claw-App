@@ -5,6 +5,7 @@ import 'package:flutter_highlight/themes/atom-one-dark.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/themes/claude_colors.dart';
+import 'zoomable_view.dart';
 
 /// Code preview with syntax highlighting via flutter_highlight.
 ///
@@ -36,58 +37,56 @@ class CodePreview extends StatelessWidget {
         ? (lineCount.toString().length * 9.0 + 22)
         : 0.0;
 
-    return InteractiveViewer(
-      minScale: 0.5,
-      maxScale: 5.0,
-      child: SingleChildScrollView(
+    final lines = content.split('\n');
+
+    return ZoomableView(
+      child: ListView.builder(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (showLineNumbers)
-            Padding(
-              padding: const EdgeInsets.only(left: 12, right: 4, top: 4),
-              child: SizedBox(
-                width: gutterWidth,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: List.generate(lineCount, (i) {
-                    return Text(
+        itemCount: lines.length,
+        itemBuilder: (context, i) {
+          final line = lines[i];
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (showLineNumbers)
+                Padding(
+                  padding: const EdgeInsets.only(left: 12, right: 4, top: 4),
+                  child: SizedBox(
+                    width: gutterWidth,
+                    child: Text(
                       (i + 1).toString(),
+                      textAlign: TextAlign.right,
                       style: GoogleFonts.robotoMono(
                         fontSize: fontSize,
                         height: 1.55,
                         color: secondary,
                       ),
-                    );
-                  }),
-                ),
-              ),
-            ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: SelectableRegion(
-                  focusNode: FocusNode(),
-                  selectionControls: materialTextSelectionControls,
-                  child: HighlightView(
-                  content,
-                  language: language ?? 'plaintext',
-                  theme: theme,
-                  padding: const EdgeInsets.fromLTRB(8, 4, 12, 12),
-                  textStyle: GoogleFonts.robotoMono(
-                    fontSize: fontSize,
-                    height: 1.55,
+                    ),
                   ),
                 ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: SelectableRegion(
+                    focusNode: FocusNode(),
+                    selectionControls: materialTextSelectionControls,
+                    child: HighlightView(
+                      line.isEmpty ? ' ' : line,
+                      language: language ?? 'plaintext',
+                      theme: theme,
+                      padding: const EdgeInsets.fromLTRB(8, 4, 12, 0),
+                      textStyle: GoogleFonts.robotoMono(
+                        fontSize: fontSize,
+                        height: 1.55,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
-    ));
+    );
   }
 }

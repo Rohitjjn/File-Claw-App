@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/themes/claude_colors.dart';
+import 'zoomable_view.dart';
 
 /// Plain text / log preview with monospace font and optional line numbers.
 class TextPreview extends StatelessWidget {
@@ -40,51 +41,44 @@ class TextPreview extends StatelessWidget {
       color: fg,
     );
 
-    Widget body = ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      itemCount: lines.length,
-      itemBuilder: (context, i) {
-        final line = lines[i];
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (showLineNumbers)
-                SizedBox(
-                  width: lineNumberWidth,
-                  child: Text(
-                    (i + 1).toString(),
-                    textAlign: TextAlign.right,
-                    style: GoogleFonts.robotoMono(
-                      fontSize: fontSize,
-                      color: secondary,
-                      height: 1.55,
+    return ZoomableView(
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        itemCount: lines.length,
+        itemBuilder: (context, i) {
+          final line = lines[i];
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (showLineNumbers)
+                  SizedBox(
+                    width: lineNumberWidth,
+                    child: Text(
+                      (i + 1).toString(),
+                      textAlign: TextAlign.right,
+                      style: GoogleFonts.robotoMono(
+                        fontSize: fontSize,
+                        color: secondary,
+                        height: 1.55,
+                      ),
                     ),
                   ),
+                if (showLineNumbers) const SizedBox(width: 12),
+                Expanded(
+                  child: SelectableText(
+                    line.isEmpty ? ' ' : line,
+                    style: textStyle,
+                    // If word wrap is disabled, setting maxLines to 1 and disabling softWrap handles it cleanly inside ListView
+                    maxLines: wordWrap ? null : 1,
+                  ),
                 ),
-              if (showLineNumbers) const SizedBox(width: 12),
-              Expanded(
-                child: wordWrap
-                    ? SelectableText(line.isEmpty ? ' ' : line, style: textStyle)
-                    : SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: SelectableText(
-                          line.isEmpty ? ' ' : line,
-                          style: textStyle,
-                        ),
-                      ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-
-    return InteractiveViewer(
-      minScale: 0.5,
-      maxScale: 5.0,
-      child: body,
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
