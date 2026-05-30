@@ -18,8 +18,6 @@ class AppNotificationService {
   bool _initialised = false;
 
   static const String _channelTransient = 'files_claw_status';
-  static const String _channelPersistent = 'files_claw_floating';
-  static const int _persistentId = 9001;
 
   Future<void> init() async {
     if (_initialised) return;
@@ -36,14 +34,6 @@ class AppNotificationService {
             _channelTransient,
             'Status',
             description: 'File open and save notifications',
-            importance: Importance.low,
-          ),
-        );
-        await android?.createNotificationChannel(
-          const AndroidNotificationChannel(
-            _channelPersistent,
-            'Floating Window',
-            description: 'Persistent notification while a file is open',
             importance: Importance.low,
           ),
         );
@@ -78,20 +68,18 @@ class AppNotificationService {
     }
   }
 
-  Future<void> showFloating(String fileName) async {
+  Future<void> showFileOpenNotification(String fileName) async {
     if (!_initialised) await init();
     try {
       await _plugin.show(
-        _persistentId,
+        fileName.hashCode,
         'Files Claw — $fileName',
-        'Tap to open the floating preview.',
+        'Tap to open the file',
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            _channelPersistent,
-            'Floating Window',
-            channelDescription: 'Persistent notification for floating preview',
-            ongoing: true,
-            autoCancel: false,
+            _channelTransient,
+            'Status',
+            channelDescription: 'File open and save notifications',
             importance: Importance.low,
             priority: Priority.low,
             icon: '@mipmap/ic_launcher',
@@ -99,14 +87,7 @@ class AppNotificationService {
         ),
       );
     } catch (e) {
-      _log.w('showFloating failed: $e');
+      _log.w('showFileOpenNotification failed: $e');
     }
-  }
-
-  Future<void> dismissFloating() async {
-    if (!_initialised) await init();
-    try {
-      await _plugin.cancel(_persistentId);
-    } catch (_) {}
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import '../core/constants/app_constants.dart';
 import '../models/file_item.dart';
@@ -29,7 +30,7 @@ class HistoryRepository {
         _cached = [];
         return const [];
       }
-      final decoded = jsonDecode(raw);
+      final decoded = await compute(jsonDecode, raw);
       if (decoded is! List) {
         _cached = [];
         return const [];
