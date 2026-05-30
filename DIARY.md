@@ -35,3 +35,5 @@
 - Addressed a hang issue when tapping the "Last Opened File" shortcut by adding error handling and initializing config in `lib/main.dart` before loading history.
 - Restored the system status bar visibility by fixing the `SystemUiOverlayStyle` configuration in Flutter (`lib/core/themes/app_theme.dart`, `lib/main.dart`) and clearing `windowFullscreen` in Android XML styles to ensure it remains transparent and visible instead of a black bar.
 - Repaired notifications when opening files by ensuring `hashCode.abs()` is used for positive integer notification IDs, and properly requesting notification permissions at startup for newer Android devices in `lib/services/notification_service.dart`.
+
+- Added an ongoing, silent notification channel (`files_claw_ongoing`) in `AppNotificationService` that persists while a file is actively being previewed or edited. The notification is automatically canceled when the file screen is disposed.

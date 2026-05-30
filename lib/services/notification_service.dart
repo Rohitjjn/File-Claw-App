@@ -18,13 +18,21 @@ class AppNotificationService {
   bool _initialised = false;
 
   static const String _channelTransient = 'files_claw_status';
+  static const String _channelOngoing = 'files_claw_ongoing';
 
   Future<void> init() async {
     if (_initialised) return;
     try {
       const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
       const initSettings = InitializationSettings(android: androidInit);
-      await _plugin.initialize(initSettings);
+
+      await _plugin.initialize(
+        initSettings,
+        onDidReceiveNotificationResponse: (details) {
+          // If user taps the ongoing notification, we just want to bring the app
+          // to foreground. Navigation is handled natively by reopening the activity.
+        },
+      );
 
       if (Platform.isAndroid) {
         final android = _plugin.resolvePlatformSpecificImplementation<
@@ -40,10 +48,58 @@ class AppNotificationService {
             importance: Importance.high,
           ),
         );
+
+        await android?.createNotificationChannel(
+          const AndroidNotificationChannel(
+            _channelOngoing,
+            'Active File',
+            description: 'Silent ongoing notification for the currently open file',
+            importance: Importance.low,
+            playSound: false,
+            enableVibration: false,
+          ),
+        );
       }
       _initialised = true;
     } catch (e, st) {
       _log.w('Notification init failed', error: e, stackTrace: st);
+    }
+  }
+
+  Future<void> showFileOngoingNotification(String fileName) async {
+    if (!_initialised) await init();
+    try {
+      await _plugin.show(
+        fileName.hashCode.abs() + 2, // Ensure uniqueness
+        'Currently Viewing',
+        fileName,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            _channelOngoing,
+            'Active File',
+            channelDescription: 'Silent ongoing notification for the currently open file',
+            importance: Importance.low,
+            priority: Priority.low,
+            ongoing: true,
+            autoCancel: false,
+            playSound: false,
+            enableVibration: false,
+            icon: '@mipmap/ic_launcher',
+          ),
+        ),
+        payload: fileName,
+      );
+    } catch (e) {
+      _log.w('showFileOngoingNotification failed: $e');
+    }
+  }
+
+  Future<void> cancelFileOngoingNotification(String fileName) async {
+    if (!_initialised) return;
+    try {
+      await _plugin.cancel(fileName.hashCode.abs() + 2);
+    } catch (e) {
+      _log.w('cancelFileOngoingNotification failed: $e');
     }
   }
 
