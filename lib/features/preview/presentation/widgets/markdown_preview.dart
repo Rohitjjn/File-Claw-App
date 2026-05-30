@@ -3,6 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/themes/claude_colors.dart';
+import 'zoomable_view.dart';
 
 /// Markdown preview using flutter_markdown with Claude-styled typography.
 class MarkdownPreview extends StatelessWidget {
@@ -28,14 +29,12 @@ class MarkdownPreview extends StatelessWidget {
         ? ClaudeColors.darkSurfaceMuted
         : ClaudeColors.lightSurfaceMuted;
 
-    return InteractiveViewer(
-      minScale: 0.5,
-      maxScale: 5.0,
+    return ZoomableView(
       child: Markdown(
         data: content,
         selectable: true,
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-      styleSheet: MarkdownStyleSheet(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        styleSheet: MarkdownStyleSheet(
         p: GoogleFonts.inter(fontSize: 16 * fontScale, height: 1.6, color: fg),
         h1: GoogleFonts.inter(
             fontSize: 24 * fontScale, fontWeight: FontWeight.w700, color: fg),
@@ -88,7 +87,8 @@ class MarkdownPreview extends StatelessWidget {
           width: 1,
           borderRadius: BorderRadius.circular(8),
         ),
+        ),
       ),
-    ));
+    );
   }
 }

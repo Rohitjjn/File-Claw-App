@@ -37,3 +37,7 @@
 - Repaired notifications when opening files by ensuring `hashCode.abs()` is used for positive integer notification IDs, and properly requesting notification permissions at startup for newer Android devices in `lib/services/notification_service.dart`.
 
 - Added an ongoing, silent notification channel (`files_claw_ongoing`) in `AppNotificationService` that persists while a file is actively being previewed or edited. The notification is automatically canceled when the file screen is disposed.
+
+### Performance & UI Updates
+- Re-architected `TextPreview` and `CodePreview` to utilize `ListView.builder` for line-by-line rendering, solving performance jank when displaying large text/code files.
+- Implemented `ZoomableView` encapsulating Flutter's built-in `InteractiveViewer` to bring pinch-to-zoom support across all text-based previews (Text, Code, Markdown), dynamically disabling pan at base scale to preserve natural scroll behavior.
