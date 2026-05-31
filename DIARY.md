@@ -42,3 +42,8 @@
 - Re-architected `TextPreview` and `CodePreview` to utilize `ListView.builder` for line-by-line rendering, solving performance jank when displaying large text/code files.
 - Implemented `ZoomableView` encapsulating Flutter's built-in `InteractiveViewer` to bring pinch-to-zoom support across all text-based previews (Text, Code, Markdown), dynamically disabling pan at base scale to preserve natural scroll behavior.
 - Fixed build error caused by missing import of `AppNotificationService` in EditorScreen.
+
+### Feature Removal & Polish
+- Uninstalled `flutter_local_notifications` and completely stripped `AppNotificationService` from the app architecture based on user instructions. Cleaned up the settings UI and model state to remove all notification toggles.
+- Re-adjusted `ZoomableView` into a stateless wrapper around `InteractiveViewer` to ensure pinch-to-zoom gestures operate without jank and pan interruption.
+- Addressed Android UI edge-to-edge issues by enforcing a transparent `navigationBarColor` and overriding `enforceNavigationBarContrast=false` in the native `styles.xml` definitions, ensuring no black bars are drawn by the system.
