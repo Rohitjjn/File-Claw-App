@@ -32,3 +32,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Fixed build error caused by missing import of `AppNotificationService` in EditorScreen.
+
+### Changed
+- Completely removed the notification system (`flutter_local_notifications`), including all associated settings toggles, as per user request.
+- Improved the smooth pinch-to-zoom experience for Text, Code, and Markdown previews by simplifying the `ZoomableView` implementation.
+- Fixed the bottom navigation bar appearing black on app startup by explicitly disabling `enforceNavigationBarContrast` and setting the color to transparent in Android's `styles.xml`.
